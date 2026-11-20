@@ -1,0 +1,53 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "7c0a918639b16bc4f394ac4ee1c09c86"
+application_url = "https://example.com"
+embedded = true
+name = "Currency Converter"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_app_proxy"
+
+# Storefront requests to /apps/currency-converter/* are signed by Shopify and
+# forwarded to /proxy/* on the app server.
+[app_proxy]
+url = "/proxy"
+prefix = "apps"
+subpath = "currency-converter"
+
+# App-owned shop metafields written by the admin settings page and read by the
+# theme block through shop.metafields["$app"].
+[shop.metafields.app.default_from]
+type = "single_line_text_field"
+name = "Currency converter default From"
+description = "Initial From currency. Empty means the shopper's current currency."
+
+[shop.metafields.app.default_to]
+type = "single_line_text_field"
+name = "Currency converter default To"
+description = "Initial To currency."
+
+[shop.metafields.app.default_range]
+type = "single_line_text_field"
+name = "Currency converter default range"
+description = "Initial chart range: 1w, 1m, 3m, 6m, 1y or 5y."
+
+[webhooks]
+api_version = "2027-01"
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/uninstalled"
+  topics = [ "app/uninstalled" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/scopes_update"
+  topics = [ "app/scopes_update" ]
+
+[auth]
+redirect_urls = [ "https://example.com/api/auth" ]
+
+[build]
+include_config_on_deploy = true
+automatically_update_urls_on_dev = true
+dev_store_url = "devstore-2ze0itgy.myshopify.com"

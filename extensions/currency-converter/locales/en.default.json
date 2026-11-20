@@ -1,0 +1,23 @@
+{
+  "currency_converter": {
+    "amount": "Amount",
+    "from": "From",
+    "to": "To",
+    "swap": "Swap currencies",
+    "history": "Rate history",
+    "chart_range": "Chart range",
+    "loading": "Loading exchange rate...",
+    "rate_as_of": "Rate as of %1",
+    "invalid_amount": "Enter a valid amount.",
+    "load_error": "Unable to load the exchange rate. Please try again later.",
+    "no_history": "No historical data is available for this pair and range.",
+    "chart_label": "Exchange rate history for %1 to %2",
+    "change": "Change",
+    "high": "High",
+    "low": "Low",
+    "group_currency": "Currencies",
+    "group_metal": "Precious metals",
+    "group_crypto": "Cryptocurrencies",
+    "noscript": "Please enable JavaScript to use the currency converter."
+  }
+}

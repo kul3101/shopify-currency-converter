@@ -1,0 +1,143 @@
+{%- liquid
+  assign default_from = shop.metafields["$app"].default_from.value | default: cart.currency.iso_code
+  assign default_to = shop.metafields["$app"].default_to.value | default: 'USD'
+  assign default_range = shop.metafields["$app"].default_range.value | default: '3m'
+  assign ranges = '1w,1m,3m,6m,1y,5y' | split: ','
+  assign uid = 'cc-' | append: block.id
+-%}
+
+<section
+  class="cc"
+  data-currency-converter
+  data-proxy-url="/apps/currency-converter"
+  data-from="{{ default_from | escape }}"
+  data-to="{{ default_to | escape }}"
+  data-range="{{ default_range | escape }}"
+  data-locale="{{ request.locale.iso_code | escape }}"
+  data-uid="{{ uid }}"
+  style="--cc-accent: {{ block.settings.accent_color }};"
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.heading != blank -%}
+    <h2 class="cc__heading">{{ block.settings.heading | escape }}</h2>
+  {%- endif -%}
+  {%- if block.settings.intro != blank -%}
+    <p class="cc__intro">{{ block.settings.intro | escape }}</p>
+  {%- endif -%}
+
+  <form class="cc__card" data-role="form" novalidate>
+    <div class="cc__row">
+      <div class="cc__field cc__field--amount">
+        <label for="{{ uid }}-amount">{{ 'currency_converter.amount' | t }}</label>
+        <input id="{{ uid }}-amount" type="number" inputmode="decimal" min="0" step="any" value="1" data-role="amount">
+      </div>
+
+      <div class="cc__field">
+        <label for="{{ uid }}-from">{{ 'currency_converter.from' | t }}</label>
+        <select id="{{ uid }}-from" data-role="from" disabled>
+          <option value="{{ default_from | escape }}">{{ default_from | escape }}</option>
+        </select>
+      </div>
+
+      <button
+        type="button"
+        class="cc__swap"
+        data-role="swap"
+        aria-label="{{ 'currency_converter.swap' | t }}"
+        title="{{ 'currency_converter.swap' | t }}"
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+          <path d="M7 7h12m0 0-4-4m4 4-4 4M17 17H5m0 0 4 4m-4-4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <div class="cc__field">
+        <label for="{{ uid }}-to">{{ 'currency_converter.to' | t }}</label>
+        <select id="{{ uid }}-to" data-role="to" disabled>
+          <option value="{{ default_to | escape }}">{{ default_to | escape }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="cc__result" aria-live="polite">
+      <p class="cc__converted" data-role="converted"></p>
+      <p class="cc__rate" data-role="rate">&nbsp;</p>
+      <p class="cc__meta" data-role="meta">&nbsp;</p>
+      <p class="cc__error" data-role="error" role="alert" hidden></p>
+    </div>
+  </form>
+
+  <div class="cc__card cc__history">
+    <div class="cc__history-head">
+      <h3 class="cc__title">{{ 'currency_converter.history' | t }}</h3>
+      <div class="cc__ranges" role="group" aria-label="{{ 'currency_converter.chart_range' | t }}">
+        {%- for range in ranges -%}
+          <button
+            type="button"
+            class="cc__range"
+            data-range="{{ range }}"
+            aria-pressed="{% if range == default_range %}true{% else %}false{% endif %}"
+          >
+            {{- range | upcase -}}
+          </button>
+        {%- endfor -%}
+      </div>
+    </div>
+    <dl class="cc__stats" data-role="stats"></dl>
+    <div class="cc__chart" data-role="chart" aria-busy="true"></div>
+  </div>
+
+  <script type="application/json" data-role="i18n">
+    {
+      "loading": {{ 'currency_converter.loading' | t | json }},
+      "rateAsOf": {{ 'currency_converter.rate_as_of' | t | json }},
+      "invalidAmount": {{ 'currency_converter.invalid_amount' | t | json }},
+      "loadError": {{ 'currency_converter.load_error' | t | json }},
+      "noHistory": {{ 'currency_converter.no_history' | t | json }},
+      "chartLabel": {{ 'currency_converter.chart_label' | t | json }},
+      "change": {{ 'currency_converter.change' | t | json }},
+      "high": {{ 'currency_converter.high' | t | json }},
+      "low": {{ 'currency_converter.low' | t | json }},
+      "groupCurrency": {{ 'currency_converter.group_currency' | t | json }},
+      "groupMetal": {{ 'currency_converter.group_metal' | t | json }},
+      "groupCrypto": {{ 'currency_converter.group_crypto' | t | json }}
+    }
+  </script>
+
+  <noscript>
+    <p class="cc__intro">{{ 'currency_converter.noscript' | t }}</p>
+  </noscript>
+</section>
+
+{% schema %}
+{
+  "name": "Currency Converter",
+  "target": "section",
+  "javascript": "currency-converter.js",
+  "stylesheet": "currency-converter.css",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Currency converter"
+    },
+    {
+      "type": "text",
+      "id": "intro",
+      "label": "Introduction",
+      "default": "Convert between currencies using daily reference rates and see how the rate has moved over time."
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#1d4ed8"
+    },
+    {
+      "type": "paragraph",
+      "content": "Set the default currency pair and chart range in the Currency Converter app."
+    }
+  ]
+}
+{% endschema %}
