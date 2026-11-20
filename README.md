@@ -1,5 +1,8 @@
 # Currency Converter for Shopify
 
+[![CI](https://github.com/kul3101/shopify-currency-converter/actions/workflows/ci.yml/badge.svg)](https://github.com/kul3101/shopify-currency-converter/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 A Shopify app that adds a currency converter block to the storefront, backed by the
 [Frankfurter API](https://frankfurter.dev). A shopper picks any currency Frankfurter
 supports as From and To, sees the current exchange rate, converts an amount, swaps the
@@ -192,3 +195,10 @@ The tests live in `test/` and cover:
   signature, wrong secret, tampered parameters, unsupported and malformed codes,
   unknown range, and upstream failures returning a fixed 503 message that never
   includes upstream details.
+
+CI runs the tests, typecheck and lint on every push to `main` and on pull requests
+(`.github/workflows/ci.yml`).
+
+## License
+
+[MIT](LICENSE)
